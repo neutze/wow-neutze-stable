@@ -82,41 +82,27 @@ f:SetScript("OnEvent", function(_, ev)
   if DB().name and DB().name ~= "" then C_Timer.After(2, WriteMacro) end
 end)
 
--- own options panel (Options > AddOns > Neutze's Stable), works without Neutze's Pantry
+-- options page under Neutze's Pantry (Options > AddOns > Neutze's Pantry > Neutze's Stable)
+local BF = NeutzePantry
+local function FieldOpts()
+  return {
+    label = "Mount for this character - writes the character macro \"Mount\" (press Enter):",
+    get = function() return DB().name end,
+    set = SetMount,
+    status = StatusText,
+    button = "Use current mount", current = CurrentMountName, noCurrent = "Mount up first, then click this.",
+  }
+end
 local panel = CreateFrame("Frame")
 panel.name = "Neutze's Stable"
-local category
 panel:SetScript("OnShow", function(self)
   if self.built then return end
   self.built = true
   local t = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
   t:SetPoint("TOPLEFT", 16, -16); t:SetText("Neutze's Stable")
-  local l = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  l:SetPoint("TOPLEFT", t, "BOTTOMLEFT", 0, -12)
-  l:SetText("Mount for this character - writes the character macro \"Mount\" (press Enter):")
-  local box = CreateFrame("EditBox", nil, self, "InputBoxTemplate")
-  box:SetSize(240, 22); box:SetPoint("TOPLEFT", l, "BOTTOMLEFT", 6, -6); box:SetAutoFocus(false)
-  local st = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-  st:SetPoint("TOPLEFT", box, "BOTTOMLEFT", -6, -6); st:SetWidth(560); st:SetJustifyH("LEFT")
-  local function apply(v) st:SetText(SetMount(v)) end
-  box:SetText(DB().name or "")
-  box:SetScript("OnEnterPressed", function(b) apply(b:GetText()); b:ClearFocus() end)
-  box:SetScript("OnEscapePressed", function(b) b:SetText(DB().name or ""); b:ClearFocus() end)
-  local btn = CreateFrame("Button", nil, self, "UIPanelButtonTemplate")
-  btn:SetSize(150, 22); btn:SetPoint("LEFT", box, "RIGHT", 8, 0); btn:SetText("Use current mount")
-  btn:SetScript("OnClick", function() local v = CurrentMountName(); if v then box:SetText(v); apply(v) else st:SetText("Mount up first, then click this.") end end)
-  st:SetText(StatusText())
+  BF.FieldRow(self, t, FieldOpts())
 end)
-if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
-  category = Settings.RegisterCanvasLayoutCategory(panel, panel.name)
-  Settings.RegisterAddOnCategory(category)
-elseif InterfaceOptions_AddCategory then
-  InterfaceOptions_AddCategory(panel)
-end
-local function OpenPanel()
-  if category and Settings and Settings.OpenToCategory then Settings.OpenToCategory(category:GetID())
-  elseif InterfaceOptionsFrame_OpenToCategory then InterfaceOptionsFrame_OpenToCategory(panel); InterfaceOptionsFrame_OpenToCategory(panel) end
-end
+local OpenPanel = BF.AddSubPage(panel)
 
 SLASH_NEUTZESTABLE1 = "/stable"
 SLASH_NEUTZESTABLE2 = "/ns"
@@ -127,15 +113,5 @@ SlashCmdList.NEUTZESTABLE = function(msg)
 end
 
 -- field at the end of the Neutze's Pantry panel
-if NeutzePantry and NeutzePantry.RegisterSection and NeutzePantry.FieldRow then
-  NeutzePantry.RegisterSection({ display = 91, order = 910, title = "Mount (Neutze's Stable)", height = 62,
-    custom = function(parent, anchor)
-      return NeutzePantry.FieldRow(parent, anchor, {
-        label = "Mount for this character - writes the character macro \"Mount\" (press Enter):",
-        get = function() return DB().name end,
-        set = SetMount,
-        status = StatusText,
-        button = "Use current mount", current = CurrentMountName, noCurrent = "Mount up first, then click this.",
-      })
-    end })
-end
+BF.RegisterSection({ display = 91, order = 910, title = "Mount (Neutze's Stable)", height = 62,
+  custom = function(parent, anchor) return BF.FieldRow(parent, anchor, FieldOpts()) end })

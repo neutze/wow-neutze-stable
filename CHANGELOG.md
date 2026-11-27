@@ -1,5 +1,8 @@
 # Changelog
 
+## Unreleased
+- Now requires Neutze's Pantry. The options page moved under Options > AddOns > Neutze's Pantry.
+
 ## v0.0.1 — 2026-11-27
 - First release: one mount per character, written into the character macro "Mount" (mount / dismount).
 - Options panel and /stable; "Use current mount".
