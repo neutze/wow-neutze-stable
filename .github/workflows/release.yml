@@ -1,10 +1,13 @@
 name: Release
 
-# Push a tag like v0.0.2 to build the add-on zip, attach it to a GitHub release
-# and upload it to CurseForge.
-# One-time setup (repo Settings):
-#   Secrets  > Actions: CF_API_KEY            = your CurseForge API token (curseforge.com/account/api-tokens)
-#   Variables> Actions: CURSEFORGE_PROJECT_ID = the number shown on your CurseForge project page
+# Creating a GitHub release with a new tag like v0.0.2 (or pushing such a tag)
+# builds the add-on zip, attaches it to the GitHub release and uploads it to CurseForge.
+#
+# One-time setup, in this repo's Settings > Secrets and variables > Actions:
+#   Secrets   tab: CF_API_KEY            = a CurseForge API token
+#                  (create one at https://authors.curseforge.com/#/settings/api-tokens)
+#   Variables tab: CURSEFORGE_PROJECT_ID = the Project ID shown on the CurseForge project page
+# If either is missing, the zip still goes to GitHub and the run shows a warning.
 on:
   push:
     tags:
@@ -17,12 +20,23 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      CF_API_KEY: ${{ secrets.CF_API_KEY }}
-      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+      CF_API_TOKEN: ${{ secrets.CF_API_KEY }}
+      GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
     steps:
+      - name: Check CurseForge setup
+        run: |
+          if [ -z "$CF_API_TOKEN" ]; then
+            echo "::warning title=No CurseForge upload::Secret CF_API_KEY is not set, so this release only goes to GitHub."
+          fi
+          if [ -z "$CURSEFORGE_PROJECT_ID" ]; then
+            echo "::warning title=No CurseForge upload::Variable CURSEFORGE_PROJECT_ID is not set, so this release only goes to GitHub."
+          fi
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: BigWigsMods/packager@v2
+      # Pinned: v2.7.0 is the first packager that knows WoW Forever (Interface 16xxx).
+      # The floating v2 tag tags 16001 as retail on CurseForge.
+      - uses: BigWigsMods/packager@v2.7.0
         with:
-          args: ${{ vars.CURSEFORGE_PROJECT_ID && format('-p {0}', vars.CURSEFORGE_PROJECT_ID) || '' }}
+          args: ${{ env.CURSEFORGE_PROJECT_ID && format('-p {0}', env.CURSEFORGE_PROJECT_ID) || '' }}
