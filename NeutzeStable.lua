@@ -1,8 +1,8 @@
--- Neutze's Stable: one mount per character, kept in a character macro called "Mount".
+-- Neutze's Stable: one mount per character, kept in a character macro called "NPstMount" (was "Mount" before 0.0.2).
 NeutzeStable = NeutzeStable or {}
 local NS = NeutzeStable
 local PREFIX = "|cff66ccffNeutze's Stable|r: "
-local MACRO = "Mount"
+local MACRO = "NPstMount"          -- NP + module code, like the Pantry macros
 
 local function DB()
   NeutzeStableDB = NeutzeStableDB or {}
@@ -42,17 +42,18 @@ local function WriteMacro()
   local m = FindMount(DB().name)
   if not m then return nil end
   if InCombatLockdown() then NS.pending = true; return "Will update the macro after combat." end
+  NeutzePantry.RenameMacro("Mount", MACRO, function(b) return b:find("C_MountJournal.SummonByID", 1, true) end, true)
   local idx = GetMacroIndexByName(MACRO)
   if idx and idx > 0 then
     EditMacro(idx, MACRO, 134400, Body(m))
-    return "Macro |cffffd200Mount|r updated."
+    return "Macro |cffffd200NPstMount|r updated."
   end
   local _, perChar = GetNumMacros()
   if perChar and perChar >= (MAX_CHARACTER_MACROS or 18) then
     return "|cffff5555Character macro tab is full|r - free a slot, then press Enter again."
   end
   CreateMacro(MACRO, 134400, Body(m), true)
-  return "Macro |cffffd200Mount|r created on the character tab - drag it to your bar."
+  return "Macro |cffffd200NPstMount|r created on the character tab - drag it to your bar."
 end
 NS.WriteMacro = WriteMacro
 
@@ -86,7 +87,7 @@ end)
 local BF = NeutzePantry
 local function FieldOpts()
   return {
-    label = "Mount for this character - writes the character macro \"Mount\" (press Enter):",
+    label = "Mount for this character - writes the character macro \"NPstMount\" (press Enter):",
     get = function() return DB().name end,
     set = SetMount,
     status = StatusText,
