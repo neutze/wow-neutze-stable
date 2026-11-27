@@ -4,11 +4,11 @@
 
 One mount per character for **World of Warcraft: Forever**, on one button.
 
-Type the mount for this character: `/stable Swift Palomino`, or use Options > AddOns > Neutze's Stable. It writes a character macro **Mount** that mounts that mount, or dismounts you if you're mounted. "Use current mount" takes the mount you're sitting on. Change the name and the macro updates.
+Type the mount for this character: `/stable Swift Palomino`, or use Options > AddOns > Neutze's Pantry > Neutze's Stable. It writes a character macro **Mount** that mounts that mount, or dismounts you if you're mounted. "Use current mount" takes the mount you're sitting on. Change the name and the macro updates.
 
 - Partial names work (`/stable palomino`).
 - Macro changes wait until combat ends.
-- With [Neutze's Pantry](https://github.com/neutze/wow-neutze-pantry) installed, the field also shows at the bottom of `/np`.
+- **Requires [Neutze's Pantry](https://github.com/neutze/wow-neutze-pantry)**: install it too. This add-on's options page sits under Neutze's Pantry. The field also shows at the bottom of `/np`.
 
 ![Mount field](screenshots/stable-field.png)
 

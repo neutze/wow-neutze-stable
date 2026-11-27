@@ -6,7 +6,7 @@
 ## IconTexture: Interface\AddOns\NeutzeStable\icon
 ## Category: Collections
 ## Group: Neutze's
-## OptionalDeps: NeutzePantry
+## Dependencies: NeutzePantry
 ## SavedVariablesPerCharacter: NeutzeStableDB
 
 NeutzeStable.lua
