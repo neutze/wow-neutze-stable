@@ -1,0 +1,28 @@
+name: Release
+
+# Push a tag like v0.0.2 to build the add-on zip, attach it to a GitHub release
+# and upload it to CurseForge.
+# One-time setup (repo Settings):
+#   Secrets  > Actions: CF_API_KEY            = your CurseForge API token (curseforge.com/account/api-tokens)
+#   Variables> Actions: CURSEFORGE_PROJECT_ID = the number shown on your CurseForge project page
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: BigWigsMods/packager@v2
+        with:
+          args: ${{ vars.CURSEFORGE_PROJECT_ID && format('-p {0}', vars.CURSEFORGE_PROJECT_ID) || '' }}

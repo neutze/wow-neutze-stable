@@ -1,0 +1,12 @@
+## Interface: 16001, 11509
+## Title: Neutze's Stable
+## Notes: Type the mount you want on this character; it writes a character macro "Mount" that summons it (and dismounts). /stable
+## Author: Johannes (written with Claude)
+## Version: 0.0.1
+## IconTexture: Interface\AddOns\NeutzeStable\icon
+## Category: Collections
+## Group: Neutze's
+## OptionalDeps: NeutzePantry
+## SavedVariablesPerCharacter: NeutzeStableDB
+
+NeutzeStable.lua
