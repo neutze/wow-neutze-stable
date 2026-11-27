@@ -34,8 +34,15 @@ local function CurrentMountName()
 end
 
 -- No #showtooltip: journal mounts aren't found by name, which left the "?" icon. The macro gets the mount's own icon instead.
+-- The mount is looked up by NAME when you click, not by an ID saved in the macro: the journal's IDs/positions can
+-- change during a session (new mount learned, list re-sorted), and a stale ID summoned a different mount.
 local function Body(m)
-  return "/dismount [mounted]\n/run if not IsMounted() then C_MountJournal.SummonByID(" .. m.id .. ") end"
+  local name = m.name:gsub('[\\"]', "")
+  local body = "/dismount [mounted]\n/run if IsMounted() then return end local J=C_MountJournal for _,i in ipairs(J.GetMountIDs()) do if J.GetMountInfoByID(i)==\"" .. name .. "\" then J.SummonByID(i) return end end"
+  if #body > 255 then   -- macro limit; very long names fall back to the ID
+    body = "/dismount [mounted]\n/run if not IsMounted() then C_MountJournal.SummonByID(" .. m.id .. ") end"
+  end
+  return body
 end
 local function Icon(m) return m.icon or 134400 end
 
