@@ -1,6 +1,7 @@
 # Changelog
 
 ## Unreleased
+- The mount field is no longer repeated in Pantry's panel. Its page under Neutze's Pantry is the place for it.
 - The NPstMount macro now shows the mount's own icon instead of "?".
 - The character macro is now called **NPstMount** (NP + module code, like the Pantry macros). Your old "Mount" macro is renamed on login and stays on your bars.
 - Now requires Neutze's Pantry. The options page moved under Options > AddOns > Neutze's Pantry.
