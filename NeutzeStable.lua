@@ -33,9 +33,11 @@ local function CurrentMountName()
   end
 end
 
+-- No #showtooltip: journal mounts aren't found by name, which left the "?" icon. The macro gets the mount's own icon instead.
 local function Body(m)
-  return "#showtooltip " .. m.name .. "\n/dismount [mounted]\n/run if not IsMounted() then C_MountJournal.SummonByID(" .. m.id .. ") end"
+  return "/dismount [mounted]\n/run if not IsMounted() then C_MountJournal.SummonByID(" .. m.id .. ") end"
 end
+local function Icon(m) return m.icon or 134400 end
 
 -- Create or update the character macro. Returns a status text.
 local function WriteMacro()
@@ -45,14 +47,14 @@ local function WriteMacro()
   NeutzePantry.RenameMacro("Mount", MACRO, function(b) return b:find("C_MountJournal.SummonByID", 1, true) end, true)
   local idx = GetMacroIndexByName(MACRO)
   if idx and idx > 0 then
-    EditMacro(idx, MACRO, 134400, Body(m))
+    EditMacro(idx, MACRO, Icon(m), Body(m))
     return "Macro |cffffd200NPstMount|r updated."
   end
   local _, perChar = GetNumMacros()
   if perChar and perChar >= (MAX_CHARACTER_MACROS or 18) then
     return "|cffff5555Character macro tab is full|r - free a slot, then press Enter again."
   end
-  CreateMacro(MACRO, 134400, Body(m), true)
+  CreateMacro(MACRO, Icon(m), Body(m), true)
   return "Macro |cffffd200NPstMount|r created on the character tab - drag it to your bar."
 end
 NS.WriteMacro = WriteMacro
