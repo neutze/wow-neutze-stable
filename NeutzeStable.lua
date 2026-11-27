@@ -114,7 +114,3 @@ SlashCmdList.NEUTZESTABLE = function(msg)
   if msg ~= "" then print(PREFIX .. SetMount(msg)); return end
   OpenPanel()
 end
-
--- field at the end of the Neutze's Pantry panel
-BF.RegisterSection({ display = 91, order = 910, title = "Mount (Neutze's Stable)", height = 62,
-  custom = function(parent, anchor) return BF.FieldRow(parent, anchor, FieldOpts()) end })
